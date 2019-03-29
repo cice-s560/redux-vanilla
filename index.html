@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Redux vanilla</title>
+</head>
+<body>
+    <h1>Usando Redux sin frameworks</h1>
+
+    <p>Clicks pulsados: <span id="counter">0</span></p>
+
+    <button id="btn">Suma 1</button>
+    <button id="btn-substract">Resta 1</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.min.js"></script>
+    <script>
+
+    //////////////////////////////////////
+    //////////////////////////////////////
+    // Flujo Redux
+
+    // Action creators
+    function getActionSuma(cantidad) {
+        return {
+            type: "SUMA",
+            payload: {
+                amount: cantidad
+            }
+        }
+    }
+
+    function getActionResta(cantidad) {
+        return {
+            type: "RESTA",
+            payload: {
+                amount: cantidad
+            }
+        }
+    }
+    
+    // Reducer
+    const initialState = {
+        counter: 0
+    };
+
+    function myReducer(prevState = initialState, action) {
+        switch(action.type) {
+            case "SUMA":
+                // actualizo el estado
+                return {
+                    ...prevState,
+                    counter: prevState.counter + action.payload.amount
+                };
+            case "RESTA":
+                // actualizo el estado
+                return {
+                    ...prevState,
+                    counter: prevState.counter - action.payload.amount
+                };
+            default:
+                return prevState;
+        }
+    }
+
+    // Creación de estado (STORE)
+    const store = Redux.createStore(myReducer);
+
+    store.subscribe(() => {
+        $counter.innerText = store.getState().counter;
+    });
+
+
+    //////////////////////////////////////
+    //////////////////////////////////////
+    // Flujo de app
+
+    const $btn = document.getElementById("btn");
+    const $btnSubstract = document.getElementById("btn-substract");
+    const $counter = document.getElementById("counter");
+
+    $btn.addEventListener("click", () => {
+        const action = getActionSuma(1);
+        // Disparo evento con la lógica dentro
+        store.dispatch(action);
+    });
+
+    $btnSubstract.addEventListener("click", () => {
+        const action = getActionResta(1);
+        // Disparo evento con la lógica dentro
+        store.dispatch(action);
+    });
+
+    
+    </script>
+</body>
+</html>
